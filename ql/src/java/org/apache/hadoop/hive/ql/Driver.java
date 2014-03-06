@@ -1636,5 +1636,9 @@ public class Driver implements CommandProcessor {
   public String getErrorMsg() {
     return errorMessage;
   }
+  
+  public String getErrorMessage() {
+	return errorMessage;
+  }
 
 }
