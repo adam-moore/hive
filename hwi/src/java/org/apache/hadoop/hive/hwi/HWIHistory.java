@@ -136,7 +136,7 @@ public class HWIHistory {
         e.printStackTrace();
     }
 
-    String url = "mysql://172.21.168.31:3306/rl_intelligence?rewriteBatchedStatements=true";
+    String url = "jdbc:mysql://172.21.168.31:3306/rl_intelligence?rewriteBatchedStatements=true";
     Connection con = null;
     try {
       con = DriverManager.getConnection(url, "reporting", "reporting");
