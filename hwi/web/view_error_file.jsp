@@ -16,11 +16,9 @@
 --%>
 <%@page errorPage="error_page.jsp" %>
 <%@ page import="org.apache.hadoop.hive.hwi.*,java.io.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% HWIAuth auth = (HWIAuth) session.getAttribute("auth"); %>
 <% HWISessionManager hs = (HWISessionManager) application.getAttribute("hs"); %>
-<% if (auth==null) { %>
-	<jsp:forward page="/authorize.jsp" />
-<% } %>
 <% String sessionName=request.getParameter("sessionName"); %>
 <% HWISessionItem sess = hs.findSessionItemByName(auth,sessionName);	%>
 <% int start=0; 
@@ -28,9 +26,9 @@
      start = Integer.parseInt( request.getParameter("start") );
    }
 %>
-<% int bsize=1024; 
-   if (request.getParameter("bsize")!=null){
-     bsize = Integer.parseInt( request.getParameter("bsize") );
+<% int lines=12; 
+   if (request.getParameter("lines")!=null){
+     lines = Integer.parseInt( request.getParameter("lines") );
    }
 %>
 <!DOCTYPE html>
@@ -40,7 +38,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/main.css" rel="stylesheet">
 </head>
-<body style="padding-top: 60px;">
+<body>
     <jsp:include page="/navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
@@ -49,30 +47,24 @@
 			</div><!-- span4 -->
 			<div class="span8">
 				<h2>Hive Web Interface</h2>
-				<p><%=sess.getResultFile() %></p>
-				<pre>
-					<%   
-			  File f = new File(   sess.getResultFile()  ); 
+				<p><%=sess.getErrorFile() %></p>
+
+				<pre style='overflow-x:scroll;white-space: nowrap'>
+<%   
+			  File f = new File(   sess.getErrorFile()  ); 
 			  BufferedReader br = new BufferedReader( new FileReader(f) );
-			  br.skip(start*bsize);
 			  
-			  char [] c = new char [bsize] ;
-			  int cread=-1;
-			  
-			  if( ( cread=br.read(c)) != -1 ){
-			   out.println( c ); 
-			  }
+		
+			  String sCurrentLine;
+			  int i = 0;
+			  while ((sCurrentLine = br.readLine()) != null) {
+					  out.println(sCurrentLine + "<br /><br />");  
+				  i++;
+				}
 			  br.close();	  
-			%>
+%>
           </pre>
-				<% long numberOfBlocks = f.length()/ (long)bsize;%>
-				This file contains
-				<%=numberOfBlocks%>
-				of
-				<%=bsize%>
-				blocks. <a
-					href="/hwi/view_file.jsp?sessionName=<%=sessionName%>&start=<%=(start+1) %>&bsize=<%=bsize %>">Next
-					Block</a>
+			 
 			</div><!-- span8 -->
 		</div><!-- row -->
 	</div><!-- container -->

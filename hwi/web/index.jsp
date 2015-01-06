@@ -18,15 +18,22 @@
 <%@page errorPage="error_page.jsp"%>
 <%@ page import="org.apache.hadoop.hive.hwi.*"%>
 <% HWIAuth auth = (HWIAuth) session.getAttribute("auth"); %>
-<% if (auth==null) { %>
-<jsp:forward page="/authorize.jsp" />
-<% } %>
+<% if (auth==null) { 
+	auth = (HWIAuth) session.getAttribute("auth");
+	if (auth == null) {
+		auth = new HWIAuth();
+		auth.setUser("");
+		auth.setGroups(new String[] { "" });
+		session.setAttribute("auth", auth);
+	}
+} %>
 <html>
 <head>
-<title>Hive Web Interface</title>
+<title>RL Miner</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
 </head>
-<body style="padding-top: 60px;">
+<body>
     <jsp:include page="/navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">
@@ -34,12 +41,10 @@
 				<jsp:include page="/left_navigation.jsp" />
 			</div><!-- span4 -->
 			<div class="span8">
-				<div class="hero-unit"><h2>Hive Web Interface</h2>
-				<p>The Hive Web Interface (HWI) offers an alternative to the
-					command line interface (CLI). Once authenticated users can start
-					HWIWebSessions. A HWIWebSession lives on the server users can
-					submit queries and return later to view the status of the query and
-					view any results it produced.</p>
+				<div class="hero-unit"><h2>RL Miner</h2>
+				<p>RL Miner allows analysts to extract raw information from multiple data sources
+				and transform it to discover meaningful patterns and statistics using a standard query 
+				language.</p>
 				</div><!-- hero-unit -->
 			</div><!-- span8 -->
 		</div><!-- row -->

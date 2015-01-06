@@ -44,6 +44,7 @@ org.apache.hadoop.hive.cli.*" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>HWI Hive Web Interface-Schema Browser</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
 </head>
 <body style="padding-top: 60px;">
     <jsp:include page="/navbar.jsp"></jsp:include>

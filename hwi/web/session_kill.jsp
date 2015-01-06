@@ -35,8 +35,9 @@
 <head>
 <title>Hive Web Interface</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
 </head>
-<body style="padding-top: 60px;">
+<body>
     <jsp:include page="/navbar.jsp"></jsp:include>
 	<div class="container">
 		<div class="row">

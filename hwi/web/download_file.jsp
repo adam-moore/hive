@@ -13,7 +13,24 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
---%>
-<div id="header">
-	<img src="img/logo.png"  style="margin-left:10px">
-</div>
+--%><%@page errorPage="error_page.jsp" %><%@ page import="org.apache.hadoop.hive.hwi.*,java.io.*" %><%
+HWIAuth auth = (HWIAuth) session.getAttribute("auth"); 
+HWISessionManager hs = (HWISessionManager) application.getAttribute("hs"); 
+
+String sessionName=request.getParameter("sessionName");
+HWISessionItem sess = hs.findSessionItemByName(auth,sessionName);	
+
+response.setContentType("text/plain");  
+response.setHeader("Content-Disposition","attachment;filename=" + sess.getResultFile() + ".tsv");  
+int bsize=1024; 
+
+			  File f = new File(   sess.getResultFile()  ); 
+			  BufferedReader br = new BufferedReader( new FileReader(f) );
+			  
+
+			  String sCurrentLine;
+			  while ((sCurrentLine = br.readLine()) != null) {
+					out.println(sCurrentLine);
+				}
+			  br.close();	  
+%>
