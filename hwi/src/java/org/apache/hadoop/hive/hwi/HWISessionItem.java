@@ -33,6 +33,7 @@ import org.apache.hadoop.hive.cli.OptionsProcessor;
 import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.LogUtils.LogInitializationException;
 import org.apache.hadoop.hive.conf.HiveConf;
+import org.apache.hadoop.hive.metastore.api.FieldSchema;
 import org.apache.hadoop.hive.ql.CommandNeedRetryException;
 import org.apache.hadoop.hive.ql.Driver;
 import org.apache.hadoop.hive.ql.history.HiveHistoryViewer;
@@ -311,6 +312,8 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
    */
   public void runQuery() {
     FileOutputStream fos = null;
+    FileOutputStream efos = null;
+    PrintStream errorPrintStream = null;
     if (getResultFile() != null) {
       try {
         fos = new FileOutputStream(new File(resultFile));
@@ -323,6 +326,19 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
     } else {
       l4j.debug(getSessionName() + " Output file was not specified");
     }
+
+    if (getErrorFile() != null) {
+      try {
+        efos = new FileOutputStream(new File(errorFile));
+        errorPrintStream = new PrintStream(efos, true, "UTF-8");
+      } catch (java.io.FileNotFoundException fex) {
+        l4j.error(getSessionName() + " opening errorfile " + errorFile, fex);
+      } catch (java.io.UnsupportedEncodingException uex) {
+        l4j.error(getSessionName() + " opening errorfile " + errorFile, uex);
+      }
+    } else {
+      l4j.debug(getSessionName() + " Error file was not specified");
+    }
     l4j.debug(getSessionName() + " state is now QUERY_RUNNING.");
     status = WebSessionItemStatus.QUERY_RUNNING;
 
@@ -333,6 +349,7 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
       String cmd_trimmed = cmd.trim();
       String[] tokens = cmd_trimmed.split("\\s+");
       String cmd_1 = cmd_trimmed.substring(tokens[0].length()).trim();
+
       CommandProcessor proc = null;
       try {
         proc = CommandProcessorFactory.get(tokens[0]);
@@ -347,6 +364,15 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
           queryRet.add(Integer.valueOf(qp.run(cmd).getResponseCode()));
           ArrayList<String> res = new ArrayList<String>();
           try {
+            //write column headers
+            if (ss != null) {
+              if (ss.out != null) {
+                ss.out.println(getFields(qp));
+              }
+            } else {
+              throw new RuntimeException("ss was null");
+            }
+
             while (qp.getResults(res)) {
               ArrayList<String> resCopy = new ArrayList<String>();
               resCopy.addAll(res);
@@ -364,6 +390,10 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
                 }
               }
               res.clear();
+            }
+
+            if (qp.getErrorMessage() != null) {
+              errorPrintStream.println(qp.getErrorMessage());
             }
 
           } catch (IOException ex) {
@@ -534,6 +564,34 @@ public class HWISessionItem implements Runnable, Comparable<HWISessionItem> {
    */
   protected void setAuth(HWIAuth auth) {
     this.auth = auth;
+  }
+
+  /**
+   * returns tab separated field string
+   * @param qp
+   * @return
+   */
+  private String getFields(Driver qp) {
+
+    String retFields = new String();
+    try {
+      List<FieldSchema> fieldSchemas = qp.getSchema().getFieldSchemas();
+
+      boolean first_col = true;
+      for (FieldSchema fs : fieldSchemas) {
+        if (!first_col) {
+          retFields += "\t";
+        }
+        retFields += fs.getName();
+        first_col = false;
+      }
+
+    } catch (NullPointerException e) {
+      System.out.println("Field schema not found");
+    }
+
+
+    return retFields;
   }
 
   /** Returns an unmodifiable list of queries. */
