@@ -21,6 +21,7 @@
   <li><a href="authorize.jsp"><i class="icon-lock"></i> Authorize</a></li>
   <li class="nav-header">Database</li>
   <li><a href="show_databases.jsp"><i class="icon-search"></i> Browse Schema</a></li>
+  <li><a href="http://172.21.168.118:3000/RLDash/auto-report-tool#/upload"><i class="icon-upload"></i> Upload Table Data</a></li>
   <li class="nav-header">Sessions</li>
   <li><a href="session_create.jsp"><i class="icon-user"></i> Create Session</a></li>
   <li><a href="session_list.jsp"><i class="icon-search"></i> List Sessions</a></li>

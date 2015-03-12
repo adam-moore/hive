@@ -14,22 +14,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 --%>
-<!DOCTYPE html>
-<%@page errorPage="error_page.jsp"%>
-<%@ page import="org.apache.hadoop.hive.hwi.*"%>
+<%@page errorPage="error_page.jsp" %>
+<%@ page import="org.apache.hadoop.hive.hwi.*,java.io.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% HWIAuth auth = (HWIAuth) session.getAttribute("auth"); %>
-<% if (auth==null) { 
-	auth = (HWIAuth) session.getAttribute("auth");
-	if (auth == null) {
-		auth = new HWIAuth();
-		auth.setUser("");
-		auth.setGroups(new String[] { "" });
-		session.setAttribute("auth", auth);
-	}
-} %>
+<% HWISessionManager hs = (HWISessionManager) application.getAttribute("hs"); %>
+<% String sessionName=request.getParameter("sessionName"); %>
+<% HWISessionItem sess = hs.findSessionItemByName(auth,sessionName);	%>
+<% int start=0; 
+   if (request.getParameter("start")!=null){
+     start = Integer.parseInt( request.getParameter("start") );
+   }
+%>
+<% int lines=12; 
+   if (request.getParameter("lines")!=null){
+     lines = Integer.parseInt( request.getParameter("lines") );
+   }
+%>
+<!DOCTYPE html>
 <html>
 <head>
-<title>RL Miner</title>
+<title>Hive Web Interface</title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/main.css" rel="stylesheet">
 </head>
@@ -41,11 +46,25 @@
 				<jsp:include page="/left_navigation.jsp" />
 			</div><!-- span4 -->
 			<div class="span8">
-				<div class="hero-unit"><h2>RL Miner</h2>
-				<p>RL Miner allows analysts to extract raw information from multiple data sources
-				and transform it to discover meaningful patterns and statistics using a standard query 
-				language.</p>
-				</div><!-- hero-unit -->
+				<h2>Hive Web Interface</h2>
+				<p><%=sess.getErrorFile() %></p>
+
+				<pre style='overflow-x:scroll;white-space: nowrap'>
+<%   
+			  File f = new File(   sess.getErrorFile()  ); 
+			  BufferedReader br = new BufferedReader( new FileReader(f) );
+			  
+		
+			  String sCurrentLine;
+			  int i = 0;
+			  while ((sCurrentLine = br.readLine()) != null) {
+					  out.println(sCurrentLine + "<br /><br />");  
+				  i++;
+				}
+			  br.close();	  
+%>
+          </pre>
+			 
 			</div><!-- span8 -->
 		</div><!-- row -->
 	</div><!-- container -->
