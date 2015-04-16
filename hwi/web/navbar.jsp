@@ -14,10 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 --%>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script src="http://172.21.168.118:17003/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="js/moment.js"></script>
 <script type="text/javascript" src="js/warehouse-alerts.js"></script>
 <div id="header">
 	<img src="img/logo.png"  style="margin-left:10px">
 </div>
+<div id="dw-alert-msg"></div>

@@ -37,6 +37,10 @@
 <html>
 <head>
 <title>Hive Web Interface</title>
+
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/main.css" rel="stylesheet">
 </head>
@@ -50,7 +54,7 @@
 			<div class="span8">
 				<h2>Hive Web Interface</h2>
 				<p><%=sess.getResultFile() %></p>
-				<pre>
+				<pre style="overflow: auto; word-wrap: normal; white-space: pre;">
 					<%   
 			  File f = new File(   sess.getResultFile()  ); 
 			  BufferedReader br = new BufferedReader( new FileReader(f) );

@@ -87,14 +87,15 @@
 <html>
 <head>
 <title>Manage Session <%=sessionName%></title>
-<link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/main.css" rel="stylesheet">
-<link href="css/codemirror.css" rel="stylesheet" >
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/codemirror.js"></script>
 <script type="text/javascript" src="js/sql.js"></script>
 <script type="text/javascript" src="js/matchbrackets.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/main.css" rel="stylesheet">
+<link href="css/codemirror.css" rel="stylesheet" >
 
 <style>
 table td {padding-right: 20px}
