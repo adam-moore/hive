@@ -18,6 +18,6 @@
 <script type="text/javascript" src="js/moment.js"></script>
 <script type="text/javascript" src="js/warehouse-alerts.js"></script>
 <div id="header">
-	<img src="img/logo.png"  style="margin-left:10px">
+	<a href="http://172.21.168.118:3000/RLDash/">img src="img/logo.png"  style="margin-left:10px"></a>
 </div>
 <div id="dw-alert-msg"></div>
