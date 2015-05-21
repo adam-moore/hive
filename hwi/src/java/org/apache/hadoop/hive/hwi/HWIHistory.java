@@ -139,7 +139,7 @@ public class HWIHistory {
     String url = "jdbc:mysql://dbrllasbihamaster:3306/rl_intelligence?rewriteBatchedStatements=true";
     Connection con = null;
     try {
-      con = DriverManager.getConnection(url, "reporting", "reporting");
+      con = DriverManager.getConnection(url, "reporting", "d4ta!sgo0d");
     } catch (SQLException e) {
       System.out.println("ERROR: Could not connect to MySql DB");
       e.printStackTrace();
